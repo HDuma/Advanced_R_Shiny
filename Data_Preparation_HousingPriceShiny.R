@@ -38,5 +38,18 @@ US_AnnualHousePriceIndex$Year = as.numeric(US_AnnualHousePriceIndex$Year)
 #    merge this with the dataframes using a left join so that we have a  large data set
 Final_Data = left_join(Final_Data, US_AnnualHousePriceIndex, by = c("Year"))
 
+# now bring in the dataset that contains the lat and long data of each state and conduct a merge with the final data.set
+LAT_LONG_Data <- read_excel("~/Desktop/Gradute_School/Advanced R Programming/LAT_LONG_Data.xlsx")
+
+# remove the name column, it is unnecessary
+LAT_LONG_Data = LAT_LONG_Data[-c(4)]
+
+# rename the state column to a capital S
+names(LAT_LONG_Data)[names(LAT_LONG_Data) == "state"] <- "State"
+
+# merge the data now
+Final_Data = left_join(Final_Data, LAT_LONG_Data, by = c("State"))
+
+
 #   Save the data 
 save(Final_Data,  file = "Final_Data.RData")
