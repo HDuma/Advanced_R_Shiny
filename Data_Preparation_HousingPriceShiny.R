@@ -35,8 +35,9 @@ names(LAT_LONG_Data)[names(LAT_LONG_Data) == "state"] <- "Abbreviation"
 
 # merge the data now
 Final_Data = left_join(Final_Data, LAT_LONG_Data, by = "Abbreviation")
+
+# remove missing data 
+Final_Data = na.omit(Final_Data)
                        
-
-
 #   Save the data 
 save(Final_Data,  file = "Final_Data.RData")
