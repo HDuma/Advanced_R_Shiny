@@ -1,5 +1,4 @@
 #   load the data
-load(url("https://github.com/HDuma/Advanced_R_Shiny/blob/main/CountyHousingPriceData.RData?raw=true"))
 load(url("https://github.com/HDuma/Advanced_R_Shiny/blob/main/StateHousingPriceData.RData?raw=true"))
 load(url("https://github.com/HDuma/Advanced_R_Shiny/blob/main/US_HousingPriceData.RData?raw=true"))
 
@@ -12,19 +11,6 @@ names(States_AnnualHousePriceIndex)[names(States_AnnualHousePriceIndex) == "HPI"
 names(States_AnnualHousePriceIndex)[names(States_AnnualHousePriceIndex) == "HPI with 1990 base"] <- "State_HPI_1990_base"
 names(States_AnnualHousePriceIndex)[names(States_AnnualHousePriceIndex) == "HPI with 2000 base"] <- "State_HPI_2000_base"
 
-#   remove the first column "state" from the states data since we already have an abbreviation column we will use to merge the data 
-States_AnnualHousePriceIndex = States_AnnualHousePriceIndex[-c(1)]
-
-#   now change the name of the abbreviation column to state since we'll be merging based on that column
-names(States_AnnualHousePriceIndex)[names(States_AnnualHousePriceIndex) == "Abbreviation"] <- "State"
-
-
-#    merge this with the dataframes using a left join so that we have a  large data set
-Final_Data = data.frame(left_join(Counties_AnnualHousePriceIndex, States_AnnualHousePriceIndex, by = c("State", "Year")))
-
-#   now let's remove any duplicate columns 
-Final_Data = Final_Data[-c(3,9)]
-
 #   US DATA - rename the columns to identify 
 colnames(US_AnnualHousePriceIndex)
 names(US_AnnualHousePriceIndex)[names(US_AnnualHousePriceIndex) == "Annual Change (%)"] <- "US_Annual_Change"
@@ -36,19 +22,20 @@ names(US_AnnualHousePriceIndex)[names(US_AnnualHousePriceIndex) == "HPI with 200
 US_AnnualHousePriceIndex$Year = as.numeric(US_AnnualHousePriceIndex$Year)
 
 #    merge this with the dataframes using a left join so that we have a  large data set
-Final_Data = left_join(Final_Data, US_AnnualHousePriceIndex, by = c("Year"))
+Final_Data = left_join(States_AnnualHousePriceIndex, US_AnnualHousePriceIndex, by = c("Year"))
 
 # now bring in the dataset that contains the lat and long data of each state and conduct a merge with the final data.set
-LAT_LONG_Data <- read_excel("~/Desktop/Gradute_School/Advanced R Programming/LAT_LONG_Data.xlsx")
+LAT_LONG_Data <- read_excel("~/Desktop/Gradute_School/Advanced R Programming/Project 2 - Shiny/LAT_LONG_Data.xlsx")
 
 # remove the name column, it is unnecessary
 LAT_LONG_Data = LAT_LONG_Data[-c(4)]
 
 # rename the state column to a capital S
-names(LAT_LONG_Data)[names(LAT_LONG_Data) == "state"] <- "State"
+names(LAT_LONG_Data)[names(LAT_LONG_Data) == "state"] <- "Abbreviation"
 
 # merge the data now
-Final_Data = left_join(Final_Data, LAT_LONG_Data, by = c("State"))
+Final_Data = left_join(Final_Data, LAT_LONG_Data, by = "Abbreviation")
+                       
 
 
 #   Save the data 
