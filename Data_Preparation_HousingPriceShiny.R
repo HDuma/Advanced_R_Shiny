@@ -1,3 +1,6 @@
+library(dplyr)
+library(readxl)
+
 #   load the data
 load(url("https://github.com/HDuma/Advanced_R_Shiny/blob/main/StateHousingPriceData.RData?raw=true"))
 load(url("https://github.com/HDuma/Advanced_R_Shiny/blob/main/US_HousingPriceData.RData?raw=true"))
@@ -39,8 +42,8 @@ Final_Data = left_join(Final_Data, LAT_LONG_Data, by = "Abbreviation")
 # remove missing data 
 Final_Data = na.omit(Final_Data)
 
-# remove unnecessary columns, we only want: State, Year, and State Growth
-Final_Data = Final_Data[-c(2:3,5:8,10:14)]
+# remove unnecessary columns, we only want: State, Year, and State HPI Growth
+Final_Data = Final_Data[-c(2:3,6:14)]
                        
 #   Save the data 
 save(Final_Data,  file = "Final_Data.RData")
